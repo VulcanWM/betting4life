@@ -47,7 +47,7 @@ export async function create_user(username: string, email: string) {
         wins: 0,
         losses: 0,
         draws: 0,
-        currency: 0,
+        currency: 100,
         badges: ['Early User'] 
     })
     return true

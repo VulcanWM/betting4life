@@ -21,7 +21,13 @@ export default async function Home() {
           Dashboard
         </h1>
       </div>
-      <p>Hello {userDoc.username}</p>
+      <div className="text-white dark:text-black w-[300px] h-[150px] font-mono uppercase bg-slate-500 dark:bg-slate-400 rounded-xl">
+        <p>{userDoc.username}</p>
+        <p>{userDoc.wins} wins</p>
+        <p>{userDoc.losses} losses</p>
+        <p>{userDoc.draws} draws</p>
+        <p>{userDoc.currency} currency</p>
+      </div>
     </section>
   )
 }
