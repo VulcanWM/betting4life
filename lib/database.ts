@@ -52,3 +52,17 @@ export async function create_user(username: string, email: string) {
     })
     return true
 }
+
+export async function give_currency(username: string, amount: number){
+    const user = await get_user(username)
+    if (user == false){
+        return `${user.username} does not exist!`
+    } else {
+        const newCurrency = user.currency + amount;
+        if (newCurrency < 0){
+            return `If this happens, then ${user.username} will be broke`
+        }
+        await User.findOneAndUpdate({username: username}, {currency: newCurrency});
+        return true
+    }
+}
