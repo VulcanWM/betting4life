@@ -1,6 +1,7 @@
 import dbConnect from './mongodb';
 import User from '../models/User';
 import Bet from '@/models/Bet';
+import { Types } from 'mongoose';
 
 export async function get_user(username: string) {
     await dbConnect();
@@ -105,4 +106,30 @@ export async function create_bet(starter: string, acceptor: string, guarantor: s
         guarantor: guarantor,
         status: false
     })
+}
+
+
+// make a function to get the bet from id
+
+export async function get_bet(id: string) {
+    await dbConnect();
+    const objectId = new Types.ObjectId("id")
+    const bet = await Bet.find({_id: objectId})
+    if (bet.length == 0){
+        return false
+    } else {
+        return bet[0]
+    }
+}
+
+// get the bet's id to accept
+// check if id is correct
+// check if id matches to the user who is accepting it
+// check if bet has already started
+// check if both have enough money
+// then remove the money
+// change the status to true
+
+export async function accept_bet(acceptor: string, id: string){
+    const bet = await get_bet(id)
 }
