@@ -1,6 +1,6 @@
 import dbConnect from './mongodb';
 import User from '../models/User';
-import { Types } from 'mongoose';
+import Bet from '@/models/Bet';
 
 export async function get_user(username: string) {
     await dbConnect();
@@ -65,4 +65,44 @@ export async function give_currency(username: string, amount: number){
         await User.findOneAndUpdate({username: username}, {currency: newCurrency});
         return true
     }
+}
+
+// on accepting bet, it is checked if both people have money (because this might have changed in between)
+
+export async function create_bet(starter: string, acceptor: string, guarantor: string, amount: number, title: string, desc: string){
+    const starterDoc = await get_user(starter)
+    if (starterDoc == false){
+        return `${starter} does not exist!`
+    }
+    const acceptorDoc = await get_user(acceptor)
+    if (acceptorDoc == false){
+        return `${acceptor} does not exist!`
+    }
+    const guarantorDoc = await get_user(guarantor)
+    if (guarantorDoc == false){
+        return `${guarantor} does not exist!`
+    }
+    if ((starterDoc.currency - amount) < 0){
+        return `${starter} does not have enough currency!`
+    }
+    if ((acceptorDoc.currency - amount) < 0){
+        return `${acceptor} does not have enough currency!`
+    }
+    // const removeCurrencyPerson1 = await give_currency(person1, amount*-1)
+    // if (removeCurrencyPerson1 != true){
+    //     return removeCurrencyPerson1
+    // }
+    // const removeCurrencyPerson2 = await give_currency(person2, amount*-1)
+    // if (removeCurrencyPerson2 != true){
+    //     return removeCurrencyPerson2
+    // }
+    await Bet.create({
+        title: title,
+        desc: desc,
+        amount: amount,
+        starter: starter,
+        acceptor: acceptor,
+        guarantor: guarantor,
+        status: false
+    })
 }
