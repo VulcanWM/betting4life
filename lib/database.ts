@@ -122,14 +122,33 @@ export async function get_bet(id: string) {
     }
 }
 
-// get the bet's id to accept
-// check if id is correct
-// check if id matches to the user who is accepting it
-// check if bet has already started
-// check if both have enough money
-// then remove the money
-// change the status to true
-
 export async function accept_bet(acceptor: string, id: string){
     const bet = await get_bet(id)
+    if (bet == false){
+        return "This bet id does not exist!"
+    }
+    if (bet.status == true){
+        return "This bet has already started!"
+    }
+    if (bet.acceptor != acceptor){
+        return "You are not the acceptor of this bet!"
+    }
+    const starterDoc = await get_user(bet.starter)
+    if ((starterDoc.currency - bet.amount) < 0){
+        return `${starterDoc.username} does not have enough currency!`
+    }
+    const acceptorDoc = await get_user(acceptor)
+    if ((acceptorDoc.currency - bet.amount) < 0){
+        return `${acceptor} does not have enough currency!`
+    }
+    const removeCurrencyStarter = await give_currency(starterDoc.username, bet.amount*-1)
+    if (removeCurrencyStarter != true){
+        return removeCurrencyStarter
+    }
+    const removeCurrencyAcceptor = await give_currency(acceptor, bet.amount*-1)
+    if (removeCurrencyAcceptor != true){
+        return removeCurrencyAcceptor
+    }
+    await Bet.findOneAndUpdate({_id: bet._id}, {status: true});
+    return true
 }
