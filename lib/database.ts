@@ -69,6 +69,7 @@ export async function give_currency(username: string, amount: number){
 }
 
 export async function create_bet(starter: string, acceptor: string, guarantor: string, amount: number, title: string, desc: string){
+    await dbConnect();
     const starterDoc = await get_user(starter)
     if (starterDoc == false){
         return `${starter} does not exist!`
@@ -110,6 +111,7 @@ export async function get_bet(id: string) {
 }
 
 export async function accept_bet(acceptor: string, id: string){
+    await dbConnect();
     const bet = await get_bet(id)
     if (bet == false){
         return "This bet id does not exist!"
@@ -141,6 +143,7 @@ export async function accept_bet(acceptor: string, id: string){
 }
 
 export async function deny_bet(acceptor: string, id: string){
+    await dbConnect();
     const bet = await get_bet(id)
     if (bet == false){
         return "This bet id does not exist!"
