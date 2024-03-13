@@ -157,3 +157,15 @@ export async function deny_bet(acceptor: string, id: string){
     await Bet.findOneAndDelete({id: bet._id})
     return true
 }
+
+export async function get_starter_bets(username: string){
+    await dbConnect();
+    const bets = await Bet.find({starter: username})
+    return bets;
+}
+
+export async function get_acceptor_bets(username: string){
+    await dbConnect();
+    const bets = await Bet.find({acceptor: username})
+    return bets;
+}
