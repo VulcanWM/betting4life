@@ -68,8 +68,6 @@ export async function give_currency(username: string, amount: number){
     }
 }
 
-// on accepting bet, it is checked if both people have money (because this might have changed in between)
-
 export async function create_bet(starter: string, acceptor: string, guarantor: string, amount: number, title: string, desc: string){
     const starterDoc = await get_user(starter)
     if (starterDoc == false){
@@ -89,14 +87,6 @@ export async function create_bet(starter: string, acceptor: string, guarantor: s
     if ((acceptorDoc.currency - amount) < 0){
         return `${acceptor} does not have enough currency!`
     }
-    // const removeCurrencyPerson1 = await give_currency(person1, amount*-1)
-    // if (removeCurrencyPerson1 != true){
-    //     return removeCurrencyPerson1
-    // }
-    // const removeCurrencyPerson2 = await give_currency(person2, amount*-1)
-    // if (removeCurrencyPerson2 != true){
-    //     return removeCurrencyPerson2
-    // }
     await Bet.create({
         title: title,
         desc: desc,
@@ -108,12 +98,9 @@ export async function create_bet(starter: string, acceptor: string, guarantor: s
     })
 }
 
-
-// make a function to get the bet from id
-
 export async function get_bet(id: string) {
     await dbConnect();
-    const objectId = new Types.ObjectId("id")
+    const objectId = new Types.ObjectId(id)
     const bet = await Bet.find({_id: objectId})
     if (bet.length == 0){
         return false
@@ -150,5 +137,20 @@ export async function accept_bet(acceptor: string, id: string){
         return removeCurrencyAcceptor
     }
     await Bet.findOneAndUpdate({_id: bet._id}, {status: true});
+    return true
+}
+
+export async function deny_bet(acceptor: string, id: string){
+    const bet = await get_bet(id)
+    if (bet == false){
+        return "This bet id does not exist!"
+    }
+    if (bet.status == true){
+        return "This bet has already started!"
+    }
+    if (bet.acceptor != acceptor){
+        return "You are not the acceptor of this bet!"
+    }
+    await Bet.findOneAndDelete({id: bet._id})
     return true
 }
