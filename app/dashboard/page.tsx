@@ -2,7 +2,6 @@ import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { get_user_from_email, get_acceptor_bets, get_starter_bets } from "@/lib/database";
-import { networkInterfaces } from 'os';
 
 type Bet = {
   title: String,
