@@ -7,8 +7,6 @@ import { Input } from "@/components/ui/input"
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Textarea } from "@/components/ui/textarea"
 
-
-
 const initialState = {
   message: false,
 };
@@ -30,7 +28,6 @@ export default function Signup() {
       {state.message == true ? 
       <>
         <p>Bet made</p>
-        <Link href="/dashboard" rel="noreferrer" className={buttonVariants() + " w-[100px]"}>Dashboard</Link>
         </>
       :
       <div>
