@@ -82,11 +82,23 @@ export async function create_bet(starter: string, acceptor: string, guarantor: s
     if (guarantorDoc == false){
         return `${guarantor} does not exist!`
     }
+    if (starter == acceptor){
+        return "You cannot do a bet with yourself!"
+    }
+    if (starter == guarantor || acceptor == guarantor){
+        return "The guarantor cannot be part of the bet!"
+    }
     if ((starterDoc.currency - amount) < 0){
         return `${starter} does not have enough currency!`
     }
     if ((acceptorDoc.currency - amount) < 0){
         return `${acceptor} does not have enough currency!`
+    }
+    if (desc.length > 200){
+        return "You cannot have more than 200 characters in the description!"
+    }
+    if (title.length > 50){
+        return "You cannot have more than 50 characters in the title!"
     }
     await Bet.create({
         title: title,
@@ -97,6 +109,7 @@ export async function create_bet(starter: string, acceptor: string, guarantor: s
         guarantor: guarantor,
         status: false
     })
+    return true
 }
 
 export async function get_bet(id: string) {

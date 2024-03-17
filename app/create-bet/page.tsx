@@ -1,10 +1,12 @@
 'use client'
  
 import { useFormState } from 'react-dom'
-import { createUserFunction } from '@/app/actions'
+import { createBetFunction } from '@/app/actions'
 import Link from 'next/link'
 import { Input } from "@/components/ui/input"
 import { Button, buttonVariants } from '@/components/ui/button'
+import { Textarea } from "@/components/ui/textarea"
+
 
 
 const initialState = {
@@ -14,7 +16,7 @@ const initialState = {
  
 export default function Signup() {
   const [state, formAction] = useFormState(
-    createUserFunction,
+    createBetFunction,
     initialState
   );
  
@@ -22,29 +24,24 @@ export default function Signup() {
     <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
       <div className="flex max-w-[980px] flex-col items-start gap-2">
         <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
-          Create Account
+          Create Bet
         </h1>
       </div>
       {state.message == true ? 
       <>
-        <p>Your account has been created.</p>
+        <p>Bet made</p>
         <Link href="/dashboard" rel="noreferrer" className={buttonVariants() + " w-[100px]"}>Dashboard</Link>
         </>
-      : 
-      state.message == "You are not logged in" ? 
-      <>
-        <p className="text-red-500">You are not logged in</p>
-        <p className="text-lg"><Link className="text-blue-400 hover:text-blue-300" href="/">Sign in with OAuth</Link></p>
-      </> :
+      :
       <div>
-        <p className="max-w-[700px] text-lg text-muted-foreground">
-          To have an account, you need to choose a username
-        </p>
-        <br/>
-        <form className='flex' action={formAction}>
+        <form action={formAction}>
           <p className="text-red-500">{state.message}</p>
-          <Input name="username" id="username" placeholder="username" className="w-[200px] mr-5"/>
-          <Button type="submit">set username</Button>
+          <Input name="acceptor" id="acceptor" placeholder="username of acceptor" className="w-[200px] mb-3"/>
+          <Input name="guarantor" id="guarantor" placeholder="username of guarantor" className="w-[200px] mb-3"/>
+          <Input name="amount" id="amount" placeholder="bet amount" type="number" className="w-[200px] mb-3"/>
+          <Input name="title" id="title" placeholder="title of bet" className="w-[200px] mb-3"/>
+          <Textarea name="desc" id="desc" placeholder="description of bet" className="mb-3"/>
+          <Button type="submit">create bet</Button>
         </form>
       </div>
       }
